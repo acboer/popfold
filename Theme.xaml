@@ -1,0 +1,227 @@
+<!-- Identidade visual "Bala de Goma": cores, fontes e controles do Popfold. -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Paleta -->
+    <Color x:Key="ChicleteColor">#FF7AB6</Color>
+    <Color x:Key="LavandaColor">#B79CFF</Color>
+    <Color x:Key="MentaColor">#7FE3C4</Color>
+    <Color x:Key="LimonadaColor">#FFE27A</Color>
+    <Color x:Key="UvaColor">#2B1B4A</Color>
+
+    <SolidColorBrush x:Key="Chiclete" Color="#FF7AB6" />
+    <SolidColorBrush x:Key="ChicleteForte" Color="#E8559A" />
+    <SolidColorBrush x:Key="Lavanda" Color="#B79CFF" />
+    <SolidColorBrush x:Key="LavandaClara" Color="#EEE6FF" />
+    <SolidColorBrush x:Key="Menta" Color="#7FE3C4" />
+    <SolidColorBrush x:Key="Limonada" Color="#FFE27A" />
+    <SolidColorBrush x:Key="Uva" Color="#2B1B4A" />
+    <SolidColorBrush x:Key="UvaSuave" Color="#5A4A75" />
+    <SolidColorBrush x:Key="Fundo" Color="#FFF4F8" />
+    <SolidColorBrush x:Key="Cartao" Color="#FFFFFF" />
+
+    <!-- Fontes: Fredoka (títulos) e Nunito (texto), embutidas em /fonts; sem elas, cai na fonte do Windows. -->
+    <FontFamily x:Key="DisplayFont">pack://application:,,,/fonts/#Fredoka, Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="BodyFont">pack://application:,,,/fonts/#Nunito, Segoe UI Variable Text, Segoe UI</FontFamily>
+
+    <!-- Interruptor (CheckBox): texto à esquerda, bala deslizante à direita -->
+    <Style x:Key="Toggle" TargetType="CheckBox">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{StaticResource Uva}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="CheckBox">
+                    <Grid Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter VerticalAlignment="Center" Margin="0,0,16,0" />
+                        <Border x:Name="Track" Grid.Column="1" Width="50" Height="28" CornerRadius="14"
+                                Background="#E3DAF5" VerticalAlignment="Center">
+                            <Ellipse x:Name="Thumb" Width="22" Height="22" Margin="3,0" Fill="White"
+                                     HorizontalAlignment="Left" VerticalAlignment="Center" />
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Track" Property="Background" Value="{StaticResource Chiclete}" />
+                            <Setter TargetName="Thumb" Property="HorizontalAlignment" Value="Right" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Track" Property="BorderBrush" Value="{StaticResource Uva}" />
+                            <Setter TargetName="Track" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botão de segmento (RadioButton) dentro de uma "pílula" -->
+    <Style x:Key="Segment" TargetType="RadioButton">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{StaticResource UvaSuave}" />
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bd" Height="30" CornerRadius="15" Padding="16,0" Background="Transparent">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#80FFFFFF" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="White" />
+                            <Setter Property="Foreground" Value="{StaticResource Uva}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Uva}" />
+                            <Setter TargetName="Bd" Property="BorderThickness" Value="2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SegmentGroup" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource LavandaClara}" />
+        <Setter Property="CornerRadius" Value="19" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+
+    <!-- Slider: trilho de bala (rosa até o valor, lilás claro depois) -->
+    <Style x:Key="TrackFill" TargetType="RepeatButton">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Grid Background="Transparent">
+                        <Border Height="10" CornerRadius="5" Background="{StaticResource Chiclete}" VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="TrackRest" TargetType="RepeatButton">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Grid Background="Transparent">
+                        <Border Height="10" CornerRadius="5" Background="{StaticResource LavandaClara}" VerticalAlignment="Center" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CandyThumb" TargetType="Thumb">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Grid Width="28" Height="28">
+                        <Ellipse Fill="White" Stroke="{StaticResource Chiclete}" StrokeThickness="5" />
+                        <Ellipse Width="7" Height="5" Fill="{StaticResource Chiclete}" Opacity="0.35"
+                                 HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,8,0,0" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="CandySlider" TargetType="Slider">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid Height="32">
+                        <Track x:Name="PART_Track">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="Slider.DecreaseLarge" Style="{StaticResource TrackFill}" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="Slider.IncreaseLarge" Style="{StaticResource TrackRest}" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource CandyThumb}" />
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Botão principal em pílula -->
+    <Style x:Key="PillButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Background" Value="{StaticResource Uva}" />
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="Padding" Value="26,0" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bd" Height="40" CornerRadius="20" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#41296B" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource ChicleteForte}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource Chiclete}" />
+                            <Setter TargetName="Bd" Property="BorderThickness" Value="3" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Cartão branco das seções -->
+    <Style x:Key="Card" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource Cartao}" />
+        <Setter Property="CornerRadius" Value="24" />
+        <Setter Property="Padding" Value="22,18" />
+        <Setter Property="Margin" Value="0,0,0,14" />
+    </Style>
+
+    <Style x:Key="CardTitle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource DisplayFont}" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="FontSize" Value="19" />
+        <Setter Property="Foreground" Value="{StaticResource Uva}" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <Style x:Key="Label" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource BodyFont}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="14.5" />
+        <Setter Property="Foreground" Value="{StaticResource Uva}" />
+    </Style>
+
+    <Style x:Key="Hint" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource BodyFont}" />
+        <Setter Property="FontSize" Value="12.5" />
+        <Setter Property="Foreground" Value="{StaticResource UvaSuave}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+</ResourceDictionary>

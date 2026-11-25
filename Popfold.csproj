@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Popfold</RootNamespace>
+    <AssemblyName>Popfold</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Popfold.ico</ApplicationIcon>
+    <Product>Popfold</Product>
+    <Version>0.3.0</Version>
+    <!-- Só as mensagens do .NET em português (inglês já vem embutido): instalador bem menor. -->
+    <SatelliteResourceLanguages>pt-BR;pt</SatelliteResourceLanguages>
+    <!-- DPI é definido no app.manifest (WPF); o aviso é só do WinForms (usado para o ícone da bandeja). -->
+    <!-- WPF0001: ThemeMode (visual Fluent do Windows 11) na janela de opções. -->
+    <NoWarn>$(NoWarn);WFO0003;WPF0001</NoWarn>
+    <StartupObject>Popfold.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Popfold.ico" />
+    <Resource Include="branding/icons/popfold-128.png" />
+    <!-- Fredoka e Nunito (OFL). Se a pasta estiver vazia, o app usa a fonte do Windows. -->
+    <Resource Include="fonts/*.ttf" />
+  </ItemGroup>
+
+</Project>

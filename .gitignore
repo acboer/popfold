@@ -1,0 +1,11 @@
+# Build
+bin/
+obj/
+publish/
+dist/
+*.user
+.vs/
+
+# Gerados em tempo de execução
+Popfold.template
+!installer/Popfold.template
