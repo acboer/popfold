@@ -27,11 +27,20 @@ internal sealed class TrayIcon : IDisposable
             Visible = true,
         };
         _icon.DoubleClick += (_, _) => _app.ShowSettings();
+        _icon.BalloonTipClicked += OnTipClicked;
+        _icon.BalloonTipClosed += (_, _) => _tipClick = null;
     }
 
     private void Fill(WinForms.ContextMenuStrip menu)
     {
         menu.Items.Clear();
+        if (_app.AvailableUpdate is { } up)
+        {
+            var item = new WinForms.ToolStripMenuItem(L.UpdateMenu(up.Version.ToString(3))) { Font = new Drawing.Font(menu.Font, Drawing.FontStyle.Bold) };
+            item.Click += (_, _) => _app.OpenUpdatePage();
+            menu.Items.Add(item);
+            menu.Items.Add(new WinForms.ToolStripSeparator());
+        }
         menu.Items.Add(L.NewFolder, null, (_, _) => _app.AddFolder());
         // Pastas que estão só na barra de tarefas: trazer de volta para a área de trabalho.
         var hidden = new WinForms.ToolStripMenuItem(L.ShowOnDesktop);
@@ -52,6 +61,8 @@ internal sealed class TrayIcon : IDisposable
         };
         menu.Items.Add(startup);
 
+        menu.Items.Add(L.CheckForUpdates, null, (_, _) => _ = _app.CheckForUpdatesAsync(manual: true));
+
         menu.Items.Add(L.OpenDataFolder, null, (_, _) =>
         {
             Directory.CreateDirectory(ConfigStore.DataDir);
@@ -61,7 +72,21 @@ internal sealed class TrayIcon : IDisposable
         menu.Items.Add(L.Quit, null, (_, _) => _app.ExitApp());
     }
 
-    public void ShowTip(string title, string text) => _icon.ShowBalloonTip(5000, title, text, WinForms.ToolTipIcon.Info);
+    private Action? _tipClick;
+
+    /// <summary>Balão na bandeja. <paramref name="onClick"/>: o que fazer se o usuário clicar nele.</summary>
+    public void ShowTip(string title, string text, Action? onClick = null)
+    {
+        _tipClick = onClick;
+        _icon.ShowBalloonTip(5000, title, text, WinForms.ToolTipIcon.Info);
+    }
+
+    private void OnTipClicked(object? sender, EventArgs e)
+    {
+        var a = _tipClick;
+        _tipClick = null;
+        a?.Invoke();
+    }
 
     public void Dispose()
     {

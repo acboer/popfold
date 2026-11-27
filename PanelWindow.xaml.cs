@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -250,18 +251,123 @@ public partial class PanelWindow : Window
         _app.RemoveItem(Group, vm.Model);
     }
 
+    // ---------- Reordenar itens arrastando ----------
+
+    /// <summary>Formato interno do arrasto de um item do painel (o Explorer não o aceita; outras pastas, sim).</summary>
+    internal const string ReorderFormat = "Popfold.ReorderItem";
+
+    private Point _dragStart;
+    private ItemViewModel? _dragCandidate;
+    private ItemViewModel? _dragging;
+
+    private void Item_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _dragCandidate = VmOf(sender);
+        _dragStart = e.GetPosition(this);
+    }
+
+    private void Item_PreviewMouseMove(object sender, MouseEventArgs e)
+    {
+        if (_dragging != null || _dragCandidate is not { } vm) return;
+        if (e.LeftButton != MouseButtonState.Pressed) { _dragCandidate = null; return; }
+        if (Items.Count < 2) return;
+
+        var d = e.GetPosition(this) - _dragStart;
+        if (Math.Abs(d.X) < SystemParameters.MinimumHorizontalDragDistance &&
+            Math.Abs(d.Y) < SystemParameters.MinimumVerticalDragDistance) return;
+
+        _dragCandidate = null;
+        Mouse.Capture(null); // o botão solta o mouse e não conta como clique
+        _dragging = vm;
+        vm.IsDragging = true;
+        var before = Group.Items.ToList();
+        var payload = new ItemDragPayload(Group, vm.Model);
+        DragDropEffects result;
+        try
+        {
+            var data = new DataObject(ReorderFormat, payload);
+            result = DragDrop.DoDragDrop((DependencyObject)sender, data, DragDropEffects.Move);
+        }
+        finally
+        {
+            vm.IsDragging = false;
+            _dragging = null;
+        }
+
+        if (payload.MovedOut) { e.Handled = true; return; } // foi para outra pasta; o painel já recarregou
+
+        var after = Items.Select(i => i.Model).ToList();
+        if (result == DragDropEffects.Move && !after.SequenceEqual(before))
+        {
+            Group.Items.Clear();
+            Group.Items.AddRange(after);
+            _app.SaveConfig();
+            _folder.Refresh();               // prévia 2×2 mostra os 4 primeiros
+            _app.ScheduleTaskbarUpdate(Group); // ícone e jump list seguem a nova ordem
+        }
+        else if (!after.SequenceEqual(before))
+        {
+            Reload(); // solto fora do painel: volta à ordem original
+        }
+        e.Handled = true;
+    }
+
+    /// <summary>Durante o arrasto, move o item para o lugar do bloco sob o cursor (o painel se rearranja na hora).</summary>
+    private void DragReorderOver(DragEventArgs e)
+    {
+        if (_dragging is not { } vm) return;
+
+        // Rolagem automática perto das bordas quando a pasta tem muitos itens.
+        double y = e.GetPosition(ItemsScroll).Y;
+        if (y < 28) ItemsScroll.ScrollToVerticalOffset(ItemsScroll.VerticalOffset - 12);
+        else if (y > ItemsScroll.ActualHeight - 28) ItemsScroll.ScrollToVerticalOffset(ItemsScroll.VerticalOffset + 12);
+
+        var p = e.GetPosition(ItemsHost);
+        for (int i = 0; i < Items.Count; i++)
+        {
+            if (ItemsHost.ItemContainerGenerator.ContainerFromIndex(i) is not FrameworkElement c) continue;
+            var bounds = c.TransformToAncestor(ItemsHost).TransformBounds(new Rect(c.RenderSize));
+            if (!bounds.Contains(p)) continue;
+            int from = Items.IndexOf(vm);
+            if (from >= 0 && from != i) Items.Move(from, i);
+            return;
+        }
+    }
+
     // ---------- Arrastar para dentro do painel ----------
 
     private void OnDragOver(object sender, DragEventArgs e)
     {
-        e.Effects = DropParser.CanAccept(e.Data) ? DragDropEffects.Copy : DragDropEffects.None;
+        if (e.Data.GetDataPresent(ReorderFormat))
+        {
+            e.Effects = _dragging != null ? DragDropEffects.Move : DragDropEffects.None;
+            DragReorderOver(e);
+        }
+        else
+        {
+            e.Effects = DropParser.CanAccept(e.Data) ? DragDropEffects.Copy : DragDropEffects.None;
+        }
         e.Handled = true;
     }
 
     private void OnDrop(object sender, DragEventArgs e)
     {
+        if (e.Data.GetDataPresent(ReorderFormat))
+        {
+            e.Effects = _dragging != null ? DragDropEffects.Move : DragDropEffects.None;
+            e.Handled = true;
+            return;
+        }
         var items = DropParser.Parse(e.Data);
         if (items.Count > 0) _app.AddItems(Group, items);
         e.Handled = true;
     }
+}
+
+/// <summary>O que vai junto no arrasto de um item do painel: de onde ele saiu e se foi parar em outra pasta.</summary>
+internal sealed class ItemDragPayload(FolderGroup source, FolderItem item)
+{
+    public FolderGroup Source { get; } = source;
+    public FolderItem Item { get; } = item;
+    public bool MovedOut { get; set; }
 }

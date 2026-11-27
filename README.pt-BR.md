@@ -24,12 +24,17 @@ reiniciar o computador uma vez.
 - **Arraste** programas, atalhos, arquivos, pastas ou links do navegador **até o ícone da pasta**.
   Os atalhos (.lnk/.url) são copiados para dentro do app, então você pode apagar o original da área de trabalho.
 - **Arraste a pasta** para mudar ela de lugar.
+- **Arraste um item dentro do painel** para mudar a ordem (a prévia 2×2 mostra os quatro primeiros), ou
+  **solte-o em outra pasta** para mover.
 - **Clique no nome** dentro do painel para renomear a pasta.
 - **Botão direito na pasta**: renomear, nova pasta, excluir, sair.
 - **Botão direito num item**: executar como administrador, abrir o local do arquivo, renomear, remover.
-- **Ícone na bandeja**: nova pasta, opções, iniciar com o Windows, pasta de dados, sair.
+- **Ícone na bandeja**: nova pasta, opções, iniciar com o Windows, procurar atualizações, pasta de dados, sair.
+- **Versão nova**: uma vez por dia o Popfold pergunta ao GitHub se saiu versão nova e avisa na bandeja
+  (clique no aviso para abrir a página de download). Só lê a lista pública de versões: não envia nada sobre você.
+  Dá para desligar nas Opções.
 - **Selecionar várias**: Ctrl+clique nas pastas ou arraste uma seleção na área de trabalho. Arrastar uma pasta selecionada move todas juntas.
-- **Opções** (botão direito na pasta ou duplo clique na bandeja): transparência, efeito vidro (desfoca o papel de parede), estilo claro/escuro, idioma (português/inglês) e iniciar com o Windows.
+- **Opções** (botão direito na pasta ou duplo clique na bandeja): transparência, efeito vidro (desfoca o papel de parede), estilo claro/escuro, idioma (português/inglês), iniciar com o Windows e avisar sobre versões novas.
 
 As pastas continuam visíveis com Win+D ("Mostrar área de trabalho").
 

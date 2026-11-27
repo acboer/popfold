@@ -83,6 +83,21 @@ public static class L
     public static string StartWithWindows => T("Iniciar com o Windows", "Start with Windows");
     public static string OpenDataFolder => T("Abrir pasta de dados", "Open data folder");
     public static string Quit => T("Sair", "Quit");
+    public static string CheckForUpdates => T("Procurar atualizações", "Check for updates");
+    public static string UpdateMenu(string v) => T($"Baixar a versão {v}…", $"Download version {v}…");
+
+    // ---- Atualizações ----
+    public static string UpdateTitle(string v) => T($"Popfold {v} disponível", $"Popfold {v} is available");
+    public static string UpdateText => T(
+        "Clique aqui para abrir a página de download. Suas pastas são mantidas ao instalar por cima.",
+        "Click here to open the download page. Your folders are kept when you install over it.");
+    public static string UpToDateTitle => T("Tudo em dia", "You're up to date");
+    public static string UpToDateText(string v) => T($"Você já tem a versão mais nova ({v}).", $"You have the latest version ({v}).");
+    public static string UpdateFailedTitle => T("Não deu para verificar", "Couldn't check for updates");
+    public static string UpdateFailedText => T("Confira a conexão com a internet e tente de novo mais tarde.", "Check your internet connection and try again later.");
+    public static string AutoUpdateCheck => T("Avisar sobre versões novas", "Tell me about new versions");
+    public static string AutoUpdateHint => T("Uma vez por dia, pergunta ao GitHub se saiu versão nova", "Once a day, asks GitHub if there's a new version");
+    public static string NewVersionLink(string v) => T($"Versão {v} disponível", $"Version {v} available");
 
     // ---- Opções ----
     public static string OptionsTitle => T($"Opções — {AppInfo.Name}", $"Options — {AppInfo.Name}");

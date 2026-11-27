@@ -22,6 +22,17 @@ public sealed class ItemViewModel : INotifyPropertyChanged
     public string ToolTipText => Model.Path;
     public Visibility FileVisibility => Model.Kind == ItemKind.File ? Visibility.Visible : Visibility.Collapsed;
 
+    private bool _isDragging;
+
+    /// <summary>O item está sendo arrastado para mudar de lugar no painel (fica meio apagado).</summary>
+    public bool IsDragging
+    {
+        get => _isDragging;
+        set { if (_isDragging == value) return; _isDragging = value; OnPropertyChanged(); OnPropertyChanged(nameof(TileOpacity)); }
+    }
+
+    public double TileOpacity => _isDragging ? 0.35 : 1.0;
+
     public ImageSource Icon
     {
         get => _icon;

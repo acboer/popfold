@@ -12,7 +12,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Popfold.ico</ApplicationIcon>
     <Product>Popfold</Product>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <!-- Só as mensagens do .NET em português (inglês já vem embutido): instalador bem menor. -->
     <SatelliteResourceLanguages>pt-BR;pt</SatelliteResourceLanguages>
     <!-- DPI é definido no app.manifest (WPF); o aviso é só do WinForms (usado para o ícone da bandeja). -->

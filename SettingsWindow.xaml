@@ -73,10 +73,17 @@
                     </StackPanel>
                 </Border>
 
-                <CheckBox x:Name="StartupCheck" Style="{StaticResource Toggle}">
+                <CheckBox x:Name="StartupCheck" Style="{StaticResource Toggle}" Margin="0,0,0,16">
                     <StackPanel>
                         <TextBlock x:Name="StartupLabel" Style="{StaticResource Label}" />
                         <TextBlock x:Name="StartupHintText" Style="{StaticResource Hint}" />
+                    </StackPanel>
+                </CheckBox>
+
+                <CheckBox x:Name="UpdateCheck" Style="{StaticResource Toggle}">
+                    <StackPanel>
+                        <TextBlock x:Name="UpdateLabel" Style="{StaticResource Label}" />
+                        <TextBlock x:Name="UpdateHintText" Style="{StaticResource Hint}" />
                     </StackPanel>
                 </CheckBox>
             </StackPanel>
@@ -87,7 +94,12 @@
         <DockPanel>
             <Button x:Name="CloseButton" DockPanel.Dock="Right" Style="{StaticResource PillButton}"
                     IsCancel="True" IsDefault="True" />
-            <TextBlock x:Name="VersionText" Style="{StaticResource Hint}" VerticalAlignment="Center" Margin="6,0,0,0" />
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="6,0,0,0">
+                <TextBlock x:Name="VersionText" Style="{StaticResource Hint}" VerticalAlignment="Center" />
+                <TextBlock x:Name="NewVersionText" Style="{StaticResource Hint}" VerticalAlignment="Center" Margin="10,0,0,0"
+                           Visibility="Collapsed" Cursor="Hand" TextDecorations="Underline"
+                           Foreground="{StaticResource Chiclete}" FontWeight="Bold" />
+            </StackPanel>
         </DockPanel>
     </StackPanel>
 </Window>

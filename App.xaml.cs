@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Microsoft.Win32;
@@ -80,6 +81,8 @@ public partial class App : Application
 
         // Atualiza os atalhos da barra de tarefas (o caminho do programa ou os ícones podem ter mudado).
         foreach (var g in Config.Folders.Where(g => g.Taskbar)) ScheduleTaskbarUpdate(g, TimeSpan.FromSeconds(3));
+
+        StartUpdateTimer();
     }
 
     // ---------- Barra de tarefas ----------
@@ -217,6 +220,73 @@ public partial class App : Application
         Config.Settings.Language = language;
         L.Apply(language);
         SaveConfig();
+    }
+
+    // ---------- Atualizações ----------
+
+    private DispatcherTimer? _updateTimer;
+    private bool _checkingUpdate;
+
+    /// <summary>Versão nova encontrada no GitHub nesta sessão (null = nenhuma, ou ainda não verificou).</summary>
+    public UpdateInfo? AvailableUpdate { get; private set; }
+
+    public event Action? UpdateStateChanged;
+
+    /// <summary>Primeira verificação 1 min depois de abrir; depois confere a cada hora se já passou um dia.</summary>
+    private void StartUpdateTimer()
+    {
+        _updateTimer = new DispatcherTimer { Interval = TimeSpan.FromMinutes(1) };
+        _updateTimer.Tick += (_, _) =>
+        {
+            _updateTimer.Interval = TimeSpan.FromHours(1);
+            var s = Config.Settings;
+            if (!s.CheckUpdates) return;
+            if (s.LastUpdateCheck is { } last && DateTime.UtcNow - last < TimeSpan.FromHours(23)) return;
+            _ = CheckForUpdatesAsync(manual: false);
+        };
+        _updateTimer.Start();
+    }
+
+    /// <summary>Consulta o GitHub. Automática: avisa uma vez por versão e fica quieta se falhar. Manual: sempre responde.</summary>
+    public async Task CheckForUpdatesAsync(bool manual)
+    {
+        if (_checkingUpdate) return;
+        _checkingUpdate = true;
+        try
+        {
+            UpdateInfo? info;
+            try { info = await UpdateChecker.CheckAsync(); }
+            catch (Exception ex)
+            {
+                if (manual) _tray?.ShowTip(L.UpdateFailedTitle, L.UpdateFailedText);
+                else Log(ex);
+                return;
+            }
+
+            var s = Config.Settings;
+            s.LastUpdateCheck = DateTime.UtcNow;
+            AvailableUpdate = info;
+            UpdateStateChanged?.Invoke();
+
+            if (info == null)
+            {
+                if (manual) _tray?.ShowTip(L.UpToDateTitle, L.UpToDateText(UpdateChecker.CurrentText));
+            }
+            else if (manual || s.NotifiedVersion != info.Version.ToString(3))
+            {
+                s.NotifiedVersion = info.Version.ToString(3);
+                _tray?.ShowTip(L.UpdateTitle(info.Version.ToString(3)), L.UpdateText, OpenUpdatePage);
+            }
+            SaveConfig();
+        }
+        finally { _checkingUpdate = false; }
+    }
+
+    public void OpenUpdatePage()
+    {
+        string url = AvailableUpdate?.PageUrl ?? UpdateChecker.ReleasesPage;
+        try { System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true }); }
+        catch (Exception ex) { Log(ex); }
     }
 
     public void ShowSettings()
@@ -395,6 +465,22 @@ public partial class App : Application
         ConfigStore.DeleteIfStored(item.Path);
         SaveConfig();
         NotifyChanged(g);
+    }
+
+    /// <summary>
+    /// Move um item de uma pasta para outra (arrastado do painel). O atalho guardado em shortcuts\ continua o mesmo,
+    /// então nada é apagado. Se o destino já tem o mesmo caminho, o item só sai da origem.
+    /// </summary>
+    public bool MoveItem(FolderGroup from, FolderGroup to, FolderItem item)
+    {
+        if (from == to || !from.Items.Contains(item)) return false;
+        from.Items.Remove(item);
+        if (!to.Items.Any(i => string.Equals(i.Path, item.Path, StringComparison.OrdinalIgnoreCase)))
+            to.Items.Add(item);
+        SaveConfig();
+        NotifyChanged(from);
+        NotifyChanged(to);
+        return true;
     }
 
     public void NotifyChanged(FolderGroup g)

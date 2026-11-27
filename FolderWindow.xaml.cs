@@ -344,15 +344,38 @@ public partial class FolderWindow : Window
 
     private void OnDragOver(object sender, DragEventArgs e)
     {
+        if (PanelItemOf(e) is { } p)
+        {
+            // Item vindo do painel de outra pasta: move para esta.
+            bool other = p.Source != Group;
+            e.Effects = other ? DragDropEffects.Move : DragDropEffects.None;
+            SetDropHighlight(other);
+            e.Handled = true;
+            return;
+        }
         bool ok = DropParser.CanAccept(e.Data);
         e.Effects = ok ? DragDropEffects.Copy : DragDropEffects.None;
         SetDropHighlight(ok);
         e.Handled = true;
     }
 
+    private static ItemDragPayload? PanelItemOf(DragEventArgs e) =>
+        e.Data.GetDataPresent(PanelWindow.ReorderFormat) ? e.Data.GetData(PanelWindow.ReorderFormat) as ItemDragPayload : null;
+
     private void OnDrop(object sender, DragEventArgs e)
     {
         SetDropHighlight(false);
+        if (PanelItemOf(e) is { } p)
+        {
+            if (p.Source != Group && _app.MoveItem(p.Source, Group, p.Item))
+            {
+                p.MovedOut = true;
+                e.Effects = DragDropEffects.Move;
+            }
+            else e.Effects = DragDropEffects.None;
+            e.Handled = true;
+            return;
+        }
         var items = DropParser.Parse(e.Data);
         if (items.Count > 0) _app.AddItems(Group, items);
         e.Handled = true;

@@ -30,6 +30,7 @@ windows, no clutter.
   press <kbd>Esc</kbd> to close.
 - **Drag and drop to add**: drop programs, shortcuts, files, folders or links from your browser onto a folder.
   Shortcuts are copied into Popfold, so you can delete the originals from your desktop.
+- **Drag to organize**: drag apps inside an open folder to reorder them, or drop one onto another folder to move it.
 - **Pin to the taskbar**: pin any Popfold next to your other apps. Click it to open the panel right above the
   taskbar, or right-click it for a quick list of its apps. You can even keep a folder *only* on the taskbar.
 - **New > Popfold**: create a folder right where you right-click on the desktop.
@@ -39,6 +40,7 @@ windows, no clutter.
 - **Looks the part**: frosted-glass folders that blend with your wallpaper, adjustable transparency,
   light and dark styles.
 - **English and Portuguese**, picked automatically from your Windows language.
+- **Update notices**: a tray notice when a new version is out.
 
 <p align="center">
   <img src="docs/images/taskbar-en.png" alt="A Popfold pinned to the taskbar" height="300">
@@ -70,9 +72,16 @@ To uninstall, use *Settings › Apps*. You'll be asked whether to keep your fold
 | Run an app as administrator, open its location, rename or remove it | Right-click it inside the panel |
 | Pin a folder to the taskbar | Right-click the folder → *Pin to taskbar…*, then right-click the shortcut that appears → *Show more options* → *Pin to taskbar* |
 | Keep a folder only on the taskbar | Right-click the folder → *Keep only on the taskbar*. Bring it back from the tray icon → *Show on desktop* |
-| Change transparency, glass, style, language or startup | Right-click a folder → *Options…* (or double-click the tray icon) |
+| Reorder apps | Drag them inside the open panel |
+| Move an app to another folder | Drag it out of the open panel onto the other folder |
+| Change transparency, glass, style, language, startup or update notices | Right-click a folder → *Options…* (or double-click the tray icon) |
+| Update Popfold | Tray icon → *Check for updates*, then install the new version over the old one |
 
 Your folders are stored in `%AppData%\Popfold`.
+
+**Privacy:** the only thing Popfold looks up online on its own is the public list of Popfold releases on GitHub,
+once a day, to tell you about new versions. No data about you or your folders is sent. Turn it off in *Options*.
+(Website shortcuts also fetch their icon from that website.)
 
 ## Building from source
 

@@ -24,6 +24,7 @@ public partial class SettingsWindow : Window
         (S.Style == "dark" ? StyleDarkRadio : StyleLightRadio).IsChecked = true;
         (S.Language switch { "pt" => LangPtRadio, "en" => LangEnRadio, _ => LangAutoRadio }).IsChecked = true;
         try { StartupCheck.IsChecked = StartupManager.IsEnabled; } catch { }
+        UpdateCheck.IsChecked = S.CheckUpdates;
         Localize();
         _loading = false;
 
@@ -40,8 +41,15 @@ public partial class SettingsWindow : Window
         LangPtRadio.Checked += (_, _) => SetLanguage("pt");
         LangEnRadio.Checked += (_, _) => SetLanguage("en");
         StartupCheck.Click += (_, _) => { try { StartupManager.Set(StartupCheck.IsChecked == true); } catch { } };
+        UpdateCheck.Click += (_, _) =>
+        {
+            S.CheckUpdates = UpdateCheck.IsChecked == true;
+            if (S.CheckUpdates) _ = _app.CheckForUpdatesAsync(manual: false);
+        };
+        NewVersionText.MouseLeftButtonUp += (_, _) => _app.OpenUpdatePage();
+        _app.UpdateStateChanged += ShowNewVersion;
         CloseButton.Click += (_, _) => Close();
-        Closed += (_, _) => _app.SaveConfig();
+        Closed += (_, _) => { _app.UpdateStateChanged -= ShowNewVersion; _app.SaveConfig(); };
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -93,7 +101,19 @@ public partial class SettingsWindow : Window
         StartupHintText.Text = L.StartHint;
         TipText.Text = L.SelectionTip;
         CloseButton.Content = L.Close;
-        var v = Assembly.GetExecutingAssembly().GetName().Version;
-        VersionText.Text = $"{AppInfo.Name} {v?.Major}.{v?.Minor}";
+        UpdateLabel.Text = L.AutoUpdateCheck;
+        UpdateHintText.Text = L.AutoUpdateHint;
+        VersionText.Text = $"{AppInfo.Name} {UpdateChecker.CurrentText}";
+        ShowNewVersion();
+    }
+
+    private void ShowNewVersion()
+    {
+        if (_app.AvailableUpdate is { } up)
+        {
+            NewVersionText.Text = L.NewVersionLink(up.Version.ToString(3));
+            NewVersionText.Visibility = Visibility.Visible;
+        }
+        else NewVersionText.Visibility = Visibility.Collapsed;
     }
 }

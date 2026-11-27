@@ -48,6 +48,15 @@ public sealed class AppSettings
 
     /// <summary>"auto", "pt" ou "en".</summary>
     public string Language { get; set; } = "auto";
+
+    /// <summary>Uma vez por dia, pergunta ao GitHub se há versão nova.</summary>
+    public bool CheckUpdates { get; set; } = true;
+
+    /// <summary>Última consulta ao GitHub que deu certo (UTC).</summary>
+    public DateTime? LastUpdateCheck { get; set; }
+
+    /// <summary>Versão nova que já ganhou aviso na bandeja (para não repetir todo dia).</summary>
+    public string? NotifiedVersion { get; set; }
 }
 
 public sealed class AppConfig

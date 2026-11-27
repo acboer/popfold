@@ -70,7 +70,7 @@
                 </TextBox.Template>
             </TextBox>
 
-            <ScrollViewer MaxHeight="440" VerticalScrollBarVisibility="Auto"
+            <ScrollViewer x:Name="ItemsScroll" MaxHeight="440" VerticalScrollBarVisibility="Auto"
                           HorizontalScrollBarVisibility="Disabled" Focusable="False">
                 <ItemsControl x:Name="ItemsHost" Focusable="False"
                               KeyboardNavigation.DirectionalNavigation="Contained">
@@ -82,6 +82,9 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button Style="{StaticResource TileButton}" Click="Item_Click"
+                                    Opacity="{Binding TileOpacity}"
+                                    PreviewMouseLeftButtonDown="Item_PreviewMouseLeftButtonDown"
+                                    PreviewMouseMove="Item_PreviewMouseMove"
                                     ToolTip="{Binding ToolTipText}" ToolTipService.InitialShowDelay="900">
                                 <Button.ContextMenu>
                                     <ContextMenu>
