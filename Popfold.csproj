@@ -12,7 +12,17 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Popfold.ico</ApplicationIcon>
     <Product>Popfold</Product>
-    <Version>0.4.0</Version>
+    <!-- Dados de quem publica (Propriedades > Detalhes). Arquivos sem eles parecem mais suspeitos aos antivírus. -->
+    <!-- AssemblyTitle vira a "Descrição do arquivo", que o Gerenciador de Tarefas mostra: mantenha só "Popfold". -->
+    <AssemblyTitle>Popfold</AssemblyTitle>
+    <Company>acboer</Company>
+    <Authors>acboer</Authors>
+    <Copyright>Copyright (c) 2026 acboer. MIT License.</Copyright>
+    <Description>Android/iOS-style folders for the Windows desktop and taskbar.</Description>
+    <PackageProjectUrl>https://github.com/acboer/popfold</PackageProjectUrl>
+    <Version>0.4.1</Version>
+    <!-- "Versão do produto" limpa (0.4.1), sem o hash do commit colado. -->
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <!-- Só as mensagens do .NET em português (inglês já vem embutido): instalador bem menor. -->
     <SatelliteResourceLanguages>pt-BR;pt</SatelliteResourceLanguages>
     <!-- DPI é definido no app.manifest (WPF); o aviso é só do WinForms (usado para o ícone da bandeja). -->

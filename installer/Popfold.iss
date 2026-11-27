@@ -13,6 +13,18 @@ AppName={#AppName}
 AppVersion={#ShortVersion}
 AppVerName={#AppName} {#ShortVersion}
 VersionInfoVersion={#AppVersion}
+; Dados de quem publica: aparecem em Propriedades > Detalhes e em Configurações > Aplicativos.
+; Instaladores sem eles parecem mais suspeitos aos antivírus por aprendizado de máquina.
+AppPublisher=acboer
+AppPublisherURL=https://github.com/acboer/popfold
+AppSupportURL=https://github.com/acboer/popfold/issues
+AppUpdatesURL=https://github.com/acboer/popfold/releases/latest
+AppCopyright=Copyright (c) 2026 acboer. MIT License.
+VersionInfoCompany=acboer
+VersionInfoDescription={#AppName} Setup
+VersionInfoProductName={#AppName}
+VersionInfoProductVersion={#AppVersion}
+VersionInfoCopyright=Copyright (c) 2026 acboer. MIT License.
 DefaultDirName={autopf}\{#AppName}
 DisableProgramGroupPage=yes
 DisableDirPage=auto
